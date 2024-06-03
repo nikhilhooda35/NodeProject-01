@@ -5,6 +5,9 @@ GET /api/users - List all users JSON - Done
 GET /users/1 - Get the user with ID 1
 GET /users/2 - Get the user with ID 2
 
+Dynamic Path Parameters
+GET /api/users/:id
+:id -> variable
 
 POST /users - Create new user
 
