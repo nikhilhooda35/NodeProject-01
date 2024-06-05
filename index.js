@@ -34,16 +34,19 @@ app.get("/users", (req, res) => {
 // REST API
 app.get("/api/users", (req, res) => {
   console.log('In Get users', req.myUserName);
+  console.log(req.headers);
+  res.setHeader("X-MyName", "Nikhil");
+  // Always Add X to Custom Headers
   return res.json(users);
 });
- 
+
 app
   .route("/api/users/:id")
   .get((req, res) => {
     const id = Number(req.params.id);
     let usend = []
     const user = users.map((user) => { if (user.id === id) { usend.push(user) } });
-    return res.json(usend);
+    return res.status(200).json(usend);
   })
 
   .patch((req, res) => {
@@ -121,9 +124,12 @@ app
 app.post("/api/users", (req, res) => {
   //TODO: Create New User
   const body = req.body;
+  if (!body || !body.first_name || !body.last_name || !body.email || !body.gender || !body.job_title) {
+    return res.status(400).json({ msg: "Incomplete request" })
+  }
   users.push({ id: users.length + 1, ...body });
   fs.writeFile("./MOCK_DATA.json", JSON.stringify(users), (err, data) => {
-    return res.json({ status: "Success", id: users.length });
+    return res.status(201).json({ status: "Success", id: users.length });
   });
 });
 
