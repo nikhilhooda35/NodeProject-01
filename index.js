@@ -9,10 +9,9 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 app.use((req, res, next) => {
-  console.log("Hello from middleware 1");
-  // return res.json({msgs: "Hello from middleware 1"});
-  req.myUserName = "nikhil.dev"
-  next();
+  fs.appendFile("log.txt", `\n${req.method}: ${req.path}: ${req.ip}: ${Date.now()}:`, (err, data) => {
+    next();
+  })
 });
 
 app.use((req, res, next) => {
@@ -37,13 +36,14 @@ app.get("/api/users", (req, res) => {
   console.log('In Get users', req.myUserName);
   return res.json(users);
 });
-
+ 
 app
   .route("/api/users/:id")
   .get((req, res) => {
     const id = Number(req.params.id);
-    const user = users.find((user) => user.id === id);
-    return res.json(user);
+    let usend = []
+    const user = users.map((user) => { if (user.id === id) { usend.push(user) } });
+    return res.json(usend);
   })
 
   .patch((req, res) => {
