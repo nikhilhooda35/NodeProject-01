@@ -11,6 +11,14 @@ app.use(express.urlencoded({ extended: true }));
 app.use((req, res, next) => {
   console.log("Hello from middleware 1");
   // return res.json({msgs: "Hello from middleware 1"});
+  req.myUserName = "nikhil.dev"
+  next();
+});
+
+app.use((req, res, next) => {
+  console.log("Hello from middleware 2", req.myUserName);
+  // return res.send("Hello from middleware 2");
+  // You can write DB query here
   next();
 });
 
@@ -26,6 +34,7 @@ app.get("/users", (req, res) => {
 
 // REST API
 app.get("/api/users", (req, res) => {
+  console.log('In Get users', req.myUserName);
   return res.json(users);
 });
 
